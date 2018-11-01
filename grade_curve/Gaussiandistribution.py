@@ -67,8 +67,19 @@ class Gaussian(Distribution):
 		self.stdev = sigma
 		
 		return self.stdev
-		
-		
+
+	def calculate_zscore(self, x):
+		"""Function to calculate the Z-score of any given point on a given Gaussian distribution.
+
+		Args: 
+			x (float): the point whose Z-score we want to calculate
+
+		Returns: 
+			float: standard deviation of the data set
+		"""
+
+		return((x - self.mean)/self.stdev)
+
 		
 	def plot_histogram(self):
 		"""Function to output a histogram of the instance variable data using 

@@ -1,3 +1,5 @@
+import numpy as np
+
 class Distribution:
 	
 	def __init__(self, mu=0, sigma=1):
@@ -9,11 +11,28 @@ class Distribution:
 			mean (float) representing the mean value of the distribution
 			stdev (float) representing the standard deviation of the distribution
 			data_list (list of floats) a list of floats extracted from the data file
-			"""
+
+		"""
 		
 		self.mean = mu
 		self.stdev = sigma
 		self.data = []
+
+	def calculate_percentiles(self, percentiles):
+		""" Given a list of percentiles, returns the points on the distribution corresponding to these
+
+		Arg:
+			percentiles (list): a list of percentiles value to calculate
+
+		Returns:
+			(list): the points on the distribution corresponding to these percentiles
+
+		"""
+
+		percentiles = np.percentile(np.array(self.data), percentiles)
+
+
+		return(percentiles.tolist())
 
 
 	def read_data_file(self, file_name):
