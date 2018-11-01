@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+import pandas as pd
 
 class Distribution:
 
@@ -50,14 +51,13 @@ class Distribution:
             with open(file_name) as file:
                 data_list = []
                 line = file.readline()
-            while line:
-                data_list.append(int(line))
-                line = file.readline()
+                while line:
+                    data_list.append(int(line))
+                    line = file.readline()
             file.close()
 
         if file_type == 'csv':
-            with open(file_name, 'r') as file:
-                reader = csv.reader(file)
-                data_list = list(reader)
+            data = pd.read_csv(file_name, header = None)
+            data_list = data.iloc[:,0].values.tolist()
 
         self.data = data_list
