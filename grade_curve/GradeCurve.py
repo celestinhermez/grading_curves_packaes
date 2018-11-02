@@ -34,8 +34,16 @@ class GradeCurve(Gaussian):
             a Pandas dataframe of the original grades and the corresponding letter grades
 
         """
+        # we assert that either the default is chosen or one of the other 3 arguments
+        assert (default or (grades is not None or percentiles is not None or z_scores is not None)), \
+                "Must choose the default cutoffs or any of the other three possible cutoffs"
+
 
         if default:
+
+            # We check that not both the default and other arguments are being passed
+            assert (grades is None and percentiles is None and z_scores is None), \
+                "Cannot pass an argument if the default cutoffs are chosen"
 
             # We use a dictionary to store the cutoffs, loop through all the grades to check where they fall compared
             # to the cutoff. Important to have the lower bound otherwise it will fail
@@ -62,7 +70,11 @@ class GradeCurve(Gaussian):
 
         # Work with z-scores cutoffs, add lower bound (-Inf)
 
-
+        else:
+            assert ((grades is not None and percentiles is None and z_scores is None) or \
+                   (grades is None and percentiles is not None and z_scores is None) or \
+                   (grades is None and percentiles is None and z_scores is not None)),\
+                "Only one of the three arguments grades, percentiles and z_score can be passed"
 
         if write_csv:
             curved_grades.to_csv('curved_grades.csv', index = False)
