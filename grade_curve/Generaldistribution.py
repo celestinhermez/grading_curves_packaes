@@ -1,6 +1,5 @@
-import numpy as np
-import csv
 import pandas as pd
+from scipy.stats import percentileofscore
 
 class Distribution:
 
@@ -19,20 +18,20 @@ class Distribution:
         self.stdev = sigma
         self.data = []
 
-    def calculate_percentiles(self, percentiles):
-        """ Given a list of percentiles, returns the points on the distribution corresponding to these
+    def calculate_percentile(self, x):
+        """ Given a point on a distribution, get its percentile rank
 
         Arg:
-            percentiles (list): a list of percentiles value to calculate
+            x (float): a point whose percentile rank we desire
 
         Returns:
-            (list): the points on the distribution corresponding to these percentiles
+            (float): the percentile rank
 
         """
 
-        percentiles = np.percentile(np.array(self.data), percentiles)
+        rank = percentileofscore(self.data, x)
 
-        return (percentiles.tolist())
+        return rank
 
     def read_data_file(self, file_name, file_type='csv'):
         """Function to read in data from a file. The file should have

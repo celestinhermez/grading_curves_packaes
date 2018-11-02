@@ -71,10 +71,51 @@ class GradeCurve(Gaussian):
         # Work with z-scores cutoffs, add lower bound (-Inf)
 
         else:
+
+            # we check only one of the other three options is chosen
             assert ((grades is not None and percentiles is None and z_scores is None) or \
                    (grades is None and percentiles is not None and z_scores is None) or \
                    (grades is None and percentiles is None and z_scores is not None)),\
                 "Only one of the three arguments grades, percentiles and z_score can be passed"
+
+            if grades is not None:
+
+                assert type(grades) is dict, "The variable must be a dictionary of the form {raw_cutoff: letter grade}"
+
+                letter_grades = list()
+                cutoffs = grades
+                reverse_cutoffs = {v: k for k, v in cutoffs.items()}
+
+                for grade in self.data:
+                    for cutoff in cutoffs.values():
+                        if grade >= cutoff:
+                            letter_grades.append(reverse_cutoffs[cutoff])
+                            break
+
+                # We create a dataframe to return, and write it to csv or txt if the user so chooses
+
+                curved_grades = pd.DataFrame({"Original Grades": self.data, "Letter Grades": letter_grades})
+                curved_grades = curved_grades[['Original Grades', 'Letter Grades']]
+
+            elif percentiles is not None:
+                assert type(percentiles) is dict, \
+                    "The variable must be a dictionary of the form {percentiles_cutoff: letter grade}"
+
+                letter_grades = list()
+                cutoffs = percentiles
+                reverse_cutoffs = {v: k for k, v in cutoffs.items()}
+
+                for grade in self.data:
+
+                    for cutoff in cutoffs.values():
+                        if grade >= cutoff:
+                            letter_grades.append(reverse_cutoffs[cutoff])
+                            break
+
+                # We create a dataframe to return, and write it to csv or txt if the user so chooses
+
+                curved_grades = pd.DataFrame({"Original Grades": self.data, "Letter Grades": letter_grades})
+                curved_grades = curved_grades[['Original Grades', 'Letter Grades']]
 
         if write_csv:
             curved_grades.to_csv('curved_grades.csv', index = False)
