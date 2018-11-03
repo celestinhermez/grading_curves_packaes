@@ -103,6 +103,7 @@ class GradeCurve(Gaussian):
                 assert type(percentiles) is dict, \
                     "The variable must be a dictionary of the form {letter grade: percentiles cutoff}"
 
+                assert all(v > 0.99 for v in percentiles.values()), "Use percentage not decimal representation"
                 letter_grades = list()
                 cutoffs = percentiles
                 cutoffs['F'] = 0 # we add the lower bound in case the user forgot
