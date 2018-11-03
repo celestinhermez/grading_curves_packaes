@@ -1,5 +1,6 @@
 from Gaussiandistribution import Gaussian
 import pandas as pd
+from numpy import inf
 
 class GradeCurve(Gaussian):
     """ Class for curving grades on a test, either based on a Gaussian
@@ -80,10 +81,11 @@ class GradeCurve(Gaussian):
 
             if grades is not None:
 
-                assert type(grades) is dict, "The variable must be a dictionary of the form {raw_cutoff: letter grade}"
+                assert type(grades) is dict, "The variable must be a dictionary of the form {letter grade: raw cutoff}"
 
                 letter_grades = list()
                 cutoffs = grades
+                cutoffs['F'] = 0
                 reverse_cutoffs = {v: k for k, v in cutoffs.items()}
 
                 for grade in self.data:
@@ -99,16 +101,17 @@ class GradeCurve(Gaussian):
 
             elif percentiles is not None:
                 assert type(percentiles) is dict, \
-                    "The variable must be a dictionary of the form {percentiles_cutoff: letter grade}"
+                    "The variable must be a dictionary of the form {letter grade: percentiles cutoff}"
 
                 letter_grades = list()
                 cutoffs = percentiles
+                cutoffs['F'] = 0 # we add the lower bound in case the user forgot
                 reverse_cutoffs = {v: k for k, v in cutoffs.items()}
 
                 for grade in self.data:
-
+                    rank = self.calculate_percentile(grade)
                     for cutoff in cutoffs.values():
-                        if grade >= cutoff:
+                        if rank >= cutoff:
                             letter_grades.append(reverse_cutoffs[cutoff])
                             break
 
@@ -116,6 +119,32 @@ class GradeCurve(Gaussian):
 
                 curved_grades = pd.DataFrame({"Original Grades": self.data, "Letter Grades": letter_grades})
                 curved_grades = curved_grades[['Original Grades', 'Letter Grades']]
+
+            elif z_scores is not None:
+                assert type(z_scores) is dict, \
+                    "The variable must be a dictionary of the form {letter grade: z_score}"
+
+                letter_grades = list()
+                cutoffs = z_scores
+                cutoffs['F'] = -inf #we add the lower bound in case the user forgot
+                reverse_cutoffs = {v: k for k, v in cutoffs.items()}
+
+                # We calculate the mean and sd for use with the z_score
+                self.calculate_mean()
+                self.calculate_stdev()
+
+                for grade in self.data:
+                    z_score = self.calculate_zscore(grade)
+                    for cutoff in cutoffs.values():
+                        if z_score >= cutoff:
+                            letter_grades.append(reverse_cutoffs[cutoff])
+                            break
+
+                # We create a dataframe to return, and write it to csv or txt if the user so chooses
+
+                curved_grades = pd.DataFrame({"Original Grades": self.data, "Letter Grades": letter_grades})
+                curved_grades = curved_grades[['Original Grades', 'Letter Grades']]
+
 
         if write_csv:
             curved_grades.to_csv('curved_grades.csv', index = False)
