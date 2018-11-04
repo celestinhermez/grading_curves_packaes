@@ -1,7 +1,9 @@
 from setuptools import setup
 
-setup(name='distributions',
-      version='0.1',
-      description='Gaussian distributions',
-      packages=['distributions'],
+setup(name='GradeCurve',
+      version='1.0.2',
+      description='Curve grades on a test',
+      packages=['GradeCurve'],
+      author = 'Celestin Hermez',
+      author_email = 'celestinhermez@gmail.com',
       zip_safe=False)

@@ -1,4 +1,4 @@
-from Gaussiandistribution import Gaussian
+from .Gaussiandistribution import Gaussian
 import pandas as pd
 from numpy import inf
 
