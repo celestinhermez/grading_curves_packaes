@@ -11,7 +11,7 @@ to illustrate the ideas of object-oriented programming.
 This package has been uploaded to PyPi, so can be installed by typing in
 the command line:
 
-```pip install grade-curve```
+```pip install GradeCurve```
 
 In order to run properly, the following packages need to be installed:
 - matplotlib
@@ -59,6 +59,9 @@ from the Gaussian class. The main addition is the curve method, which allows
 to curve grades on a test to get letter grades.
 
 ## Usage
+
+This package can be used to work with the Gaussian and Distribution classes.
+Yet, its main usage is with the GradeCurve class, with its curve method.
 
 Here is the signature of the curve method:
 
