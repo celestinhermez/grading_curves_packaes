@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='GradeCurve',
-      version='1.0.2',
+      version='1.0.5',
       description='Curve grades on a test',
       packages=['GradeCurve'],
       author = 'Celestin Hermez',
